@@ -1,34 +1,30 @@
 var express = require('express');
 var router = express.Router();
 const bcrypt = require('bcrypt');
+const { isLoggedIn } = require('../helper/util');
 const saltRounds = 10;
 
 
 module.exports = function (db) {
 
-  router.get('/', function (req, res, next) {
-    db.query("select * from users", (err, { rows }) => {
-      if (err) {
-          console.log(err);
-          res.json({ message: 'user gagal' })
-        } else {
-          res.json(rows)
-          next()
-        }
-    })
-  });
+  function query(sql, params) {
+    return new Promise((resolve, reject) => {
+      db.query(sql, params)
+        .then(result => resolve(result))
+        .catch(err => reject(err));
+    });
+  }
 
-  router.get('/add', function (req, res, next) {
-    const hash = bcrypt.hashSync(req.body.password, saltRounds);
-    db.query("insert into users(email, password) values ($1, $2)",
-      [req.body.email, hash], (err) => {
-        if (err) {
-          console.log(err);
-          res.json({ message: 'gagal menambah user' })
-        } else {
-          res.json({ message: 'user is created' })
-        }
+  router.get('/', isLoggedIn, function (req, res, next) {
+    query('select * from todos where userid = $1', [req.session.user.id])
+      .then(result => {
+        res.render('todos/list', { user: req.session.user,  data: result.rows});
+      })
+      .catch(err => {
+        console.log(err);
       })
   });
+
+  return router;
 
 };

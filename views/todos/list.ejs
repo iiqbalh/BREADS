@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breads(Browse, Read, Edit, Add, Delete, Sort)</title>
+</head>
+<link rel="stylesheet" href="stylesheets/bootstrap.min.css">
+
+<body>
+    <div class="container">
+        <div class="card text-left">
+            <div class="card-header">
+                <h3 class="float-start"><%=user.email%></h3>
+                <a href="/logout" class="btn btn-secondary float-end">Sign Out</a>
+            </div>
+            <div class="card-header text-center">
+                <h1>PostgreSQL Breads(Browse, Read, Edit, Add, Delete, Sort)</h1>
+            </div>
+            <form action="" method="get">
+
+                <input type="hidden" name="page" value="1">
+
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <label for="title" class="col-sm-2 col-form-label">Title</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="title" id="title" class="form-control"
+                                placeholder="insert your title" value="">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="date" class="col-sm-2 col-form-label">Deadline</label>
+                        <div class="col-sm-4">
+                            <input type="date" name="stardate" id="stardate" class="form-control" value="">
+                        </div>
+                        <div class="col-sm-2 text-center">
+                            <p>s.d</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="date" name="enddate" id="enddate" class="form-control" value="">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="married" class="col-sm-2 col-form-label">Complete</label>
+                        <div class="col-sm-10">
+                            <select name="married" id="married" class="form-control">
+                                <option disabled selected>-select complete-</option>
+                                <option value="false">Not Yet</option>
+                                <option value="true">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="operation" class="col-sm-2 col-form-label">Operation</label>
+                        <div class="col-sm-10">
+                            <input type="radio" name="operation" value="or" checked>OR
+                            <input type="radio" name="operation" value="and">AND
+
+                        </div>
+                    </div>
+
+
+                    <input class="btn btn-info px-3 py-1" type="submit" value="Search">
+                    <a href="/" class="btn btn-warning px-3 py-1">Reset</a>
+                    <hr>
+                </div>
+            </form>
+
+            <table id="data" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Title</th>
+                        <th>Complete</th>
+                        <th>Deadline</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <%data.forEach((item, index)=> {%>
+                        <tr>
+                            <td>
+                                <%=index + 1%>
+                            </td>
+                            <td>
+                                <%=item.title%>
+                            </td>
+                            <td>
+                                <%=item.complete%>
+                            </td>
+                            <td>
+                                <%=item.deadline%>
+                            </td>
+                            <td>
+
+                                <div class="modal" tabindex="-1" id="deleteModal">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Delete Confirmation</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>apakah kamu yakin akan menghapus data?
+                                                </p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a class="btn btn-secondary px-4 py-1"
+                                                    href="">No</a>
+                                                <button type="button" class="btn btn-warning px-4 py-1"
+                                                    onclick="deleteData()">Yes</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <a class="btn btn-success px-3 py-1" href="/edit/<%=item.id%>">Update</a>
+
+                                <a class="btn btn-danger px-3 py-1" href="#"
+                                    onclick="showDelele(`<%=item.id%>`)">Delete</a>
+                            </td>
+                        </tr>
+
+                        <%})%>
+                </tbody>
+            </table>
+            <div class="card-footer text-body-secondary">
+                <a class="btn btn-primary px-4 py-1" href="/add">Add</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

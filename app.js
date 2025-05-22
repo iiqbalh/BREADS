@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const pg = require('pg');
 const app = express();
+var session = require('express-session')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -15,23 +16,29 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({
+  secret: 'iqbal',
+  resave: false,
+  saveUninitialized: true
+}))
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 
 const { Pool } = pg
  
 const pool = new Pool({
   user: 'iqbal',
-  password: 'iqbal12345',
+  password: '12345',
   host: 'localhost',
   port: 5432,
-  database: 'postgres',
+  database: 'datadb',
 })
+
+const indexRouter = require('./routes/index')(pool);
+const usersRouter = require('./routes/users')(pool);
 
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter(pool));
+app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
