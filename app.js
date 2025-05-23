@@ -1,11 +1,14 @@
-const createError = require('http-errors');
-const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
-const pg = require('pg');
-const app = express();
+var createError = require('http-errors');
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+var pg = require('pg');
+var app = express();
 var session = require('express-session')
+var flash = require('connect-flash');
+var moment = require('moment'); // require
+moment().format();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -21,6 +24,14 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }))
+
+app.use(flash())
+
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  next();
+});
 
 
 const { Pool } = pg

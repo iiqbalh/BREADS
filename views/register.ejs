@@ -171,14 +171,25 @@
             <div class="form-floating"> <input type="email" class="form-control" id="floatingInput" name="email"
                     placeholder="name@example.com"> <label for="floatingInput">Email address</label> </div>
 
-            <div class="form-floating"> <input type="password" class="form-control" id="floatingPassword" name="password"
-                    placeholder="Password"> <label for="floatingPassword">Password</label> </div>
+            <div class="form-floating"> <input type="password" class="form-control" id="floatingPassword"
+                    name="password" placeholder="Password"> <label for="floatingPassword">Password</label> </div>
 
-            <div class="form-floating"> <input type="password" class="form-control" id="floatingPassword" name="repassword"
-                    placeholder="Retype Password"> <label for="floatingPassword">Retype Password</label> </div>
+            <div class="form-floating"> <input type="password" class="form-control" id="floatingPassword"
+                    name="repassword" placeholder="Retype Password"> <label for="floatingPassword">Retype
+                    Password</label> </div>
             </label> </div> <button class="btn btn-primary w-100 py-2" type="submit">Sign up</button>
             <p class="text-center">have a account? please <a href="/">sign in</a></p>
             <p class="mt-5 mb-3 text-body-secondary text-center">© 2017–2025</p>
+            <% if (successInfo.length> 0) { %>
+                <div class="alert alert-success" style="text-align: center;" role="alert">
+                    <%= successInfo %>
+                </div>
+                <% } %>
+                    <% if (failedInfo.length> 0) { %>
+                        <div class="alert alert-danger" style="text-align: center;" role="alert">
+                            <%= failedInfo %>
+                        </div>
+                        <% } %>
         </form>
     </main>
     <script src="/javascripts/bootstrap.bundle.min.js"

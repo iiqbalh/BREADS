@@ -1,19 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Breads(Browse, Read, Edit, Add, Delete, Sort)</title>
-</head>
-<link rel="stylesheet" href="stylesheets/bootstrap.min.css">
-
-<body>
+<%- include('../partials/header') %>
     <div class="container">
         <div class="card text-left">
             <div class="card-header">
-                <h3 class="float-start"><%=user.email%></h3>
-                <a href="/logout" class="btn btn-secondary float-end">Sign Out</a>
+                <h3 class="float-start">
+                    <%=user.email%>
+                </h3>
+                <a href="/logout" class="btn btn-secondary float-end"><i class="fa-solid fa-right-from-bracket"></i>
+                    Sign Out</a>
             </div>
             <div class="card-header text-center">
                 <h1>PostgreSQL Breads(Browse, Read, Edit, Add, Delete, Sort)</h1>
@@ -50,7 +43,7 @@
                             <select name="married" id="married" class="form-control">
                                 <option disabled selected>-select complete-</option>
                                 <option value="false">Not Yet</option>
-                                <option value="true">Yes</option>
+                                <option value="true">Done</option>
                             </select>
                         </div>
                     </div>
@@ -64,9 +57,9 @@
                         </div>
                     </div>
 
-
-                    <input class="btn btn-info px-3 py-1" type="submit" value="Search">
-                    <a href="/" class="btn btn-warning px-3 py-1">Reset</a>
+                    <button class="btn btn-info px-3 py-1" type="submit"><i
+                            class="fa-solid fa-magnifying-glass"></i></button>
+                    <a href="/" class="btn btn-warning px-3 py-1"><i class="fa-solid fa-rotate"></i></a>
                     <hr>
                 </div>
             </form>
@@ -75,9 +68,9 @@
                 <thead>
                     <tr>
                         <th>No.</th>
-                        <th>Title</th>
-                        <th>Complete</th>
-                        <th>Deadline</th>
+                        <th><i class="fa-solid fa-sort"></i>Title</th>
+                        <th><i class="fa-solid fa-sort"></i>Complete</th>
+                        <th><i class="fa-solid fa-sort"></i>Deadline</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -92,10 +85,10 @@
                                 <%=item.title%>
                             </td>
                             <td>
-                                <%=item.complete%>
+                                <%=item.complete ? 'Done' : 'Not Yet' %>
                             </td>
                             <td>
-                                <%=item.deadline%>
+                                <%= moment(item.deadline).locale('id').format('Do MMM YYYY LT') %>
                             </td>
                             <td>
 
@@ -112,8 +105,7 @@
                                                 </p>
                                             </div>
                                             <div class="modal-footer">
-                                                <a class="btn btn-secondary px-4 py-1"
-                                                    href="">No</a>
+                                                <a class="btn btn-secondary px-4 py-1" href="">No</a>
                                                 <button type="button" class="btn btn-warning px-4 py-1"
                                                     onclick="deleteData()">Yes</button>
                                             </div>
@@ -121,10 +113,11 @@
                                     </div>
                                 </div>
 
-                                <a class="btn btn-success px-3 py-1" href="/edit/<%=item.id%>">Update</a>
+                                <a class="btn btn-success py-1" href="users/update/<%=item.id%>"><i
+                                        class="fa-solid fa-pen"></i></a>
 
-                                <a class="btn btn-danger px-3 py-1" href="#"
-                                    onclick="showDelele(`<%=item.id%>`)">Delete</a>
+                                <a class="btn btn-danger py-1" href="#" onclick="showDelele(`<%=item.id%>`)"><i
+                                        class="fa-solid fa-trash"></i></a>
                             </td>
                         </tr>
 
@@ -132,10 +125,26 @@
                 </tbody>
             </table>
             <div class="card-footer text-body-secondary">
-                <a class="btn btn-primary px-4 py-1" href="/add">Add</a>
+                <a class="btn btn-primary px-4 py-1" href="users/add"><i class="fa-solid fa-plus"></i></a>
+
+                <nav aria-label="Page navigation example" class="float-end">
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
             </div>
         </div>
     </div>
-</body>
-
-</html>
+    <%- include('../partials/footer') %>

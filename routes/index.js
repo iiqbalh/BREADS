@@ -15,7 +15,7 @@ module.exports = function (db) {
 
   // login
   router.get('/', function (req, res, next) {
-    res.render('login');
+    res.render('login', { failedInfo: req.flash('failedInfo'), successInfo: req.flash('successInfo') });
   });
 
   router.post('/', function (req, res, next) {
@@ -24,12 +24,12 @@ module.exports = function (db) {
     query("select * from users where email = $1", [email])
       .then(result => {
         if (result.rows.length === 0) {
-          res.send('user not exist');
-          //return res.redirect('/');
+          req.flash('failedInfo', `User not exist`)
+          return res.redirect('/');
         } else {
           if (!bcrypt.compareSync(password, result.rows[0].password)) {
-            res.send('password is wrong');
-            //return res.redirect('/');
+            req.flash('failedInfo', `Password is wrong`)
+            return res.redirect('/');
           } else {
             req.session.user = result.rows[0]
             res.redirect('/users')
@@ -38,8 +38,8 @@ module.exports = function (db) {
       })
       .catch(err => {
         console.error(err);
-        res.end('Internal Server Error');
-        //return res.redirect('/')
+        req.flash('failedInfo', `Interval Server Error`)
+        return res.redirect('/');
       });
   });
 
@@ -54,22 +54,22 @@ module.exports = function (db) {
 
   // register
   router.get('/register', function (req, res, next) {
-    res.render('register');
+    res.render('register', { failedInfo: req.flash('failedInfo'), successInfo: req.flash('successInfo') });
   });
 
   router.post('/register', function (req, res, next) {
     const { email, password, repassword } = req.body;
-    console.log(password, repassword)
 
     if (password !== repassword) {
-      res.send("password doesn't match");
-      //return res.render('/register');
+      req.flash('failedInfo', `Password doesn't match`)
+      return res.redirect('/register');
     }
 
     query('select * from users where email = $1', [email])
       .then(result => {
         if (result.rows.length > 0) {
-          res.send("email already exist")
+          req.flash('failedInfo', `Email already exist`)
+          return res.redirect('/register');
         }
       })
       .catch(err => {
@@ -78,7 +78,9 @@ module.exports = function (db) {
 
     const hash = bcrypt.hashSync(password, saltRounds);
     query('insert into users (email, password) values ($1, $2)', [email, hash])
-      .then(res.render('/'))
+      .then(() => {
+        req.flash('successInfo', 'successfully registered, please sign in!')
+        return res.redirect('/')})
       .catch(err => {
         console.log(err)
       })
