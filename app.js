@@ -7,8 +7,6 @@ var pg = require('pg');
 var app = express();
 var session = require('express-session')
 var flash = require('connect-flash');
-var moment = require('moment'); // require
-moment().format();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
