@@ -15,37 +15,67 @@ module.exports = function (db) {
         .catch(err => reject(err));
     });
   }
-;
+  ;
   router.get('/', isLoggedIn, function (req, res, next) {
 
-    const {title, stardate, enddate, complete, operation, page, sortBy = 'title', sortMode = 'asc'} = req.query;
+    const { title, stardate, enddate, complete, operation, page = 1, sortBy = 'id', sortMode = 'asc' } = req.query;
+    const url = req.url == '/' ? `/?page=${page}&sortBy=${sortBy}&sortMode=${sortMode}` : req.url
 
-    let sql = 'select * from todos where'
-    let params = []
+    console.log(sortBy, sortMode)
 
-    if(title){
-      params.push(` title ilike '%|$1|%'`)
+    let sqlAll = `select * from todos where userid = ${req.session.user.id}`;
+    let sqlGet = `select count(*) as total from todos where userid = ${req.session.user.id}`;
+    let params = [];
+    let queries = [];
+
+    if (title) {
+      queries.push(title);
+      params.push(`title ilike '%'||$${queries.length}||'%'`);
     }
 
-    if(stardate && enddate){
-      params.push(` stardate = $2 and enddate = $3`)
-    } else if(stardate) {
-      params.push(` stardate >= $2`)
-    } else if(enddate) {
-      params.push(` enddate >= $2`)
+    if (stardate && enddate) {
+      queries.push(stardate, enddate);
+      params.push(`deadline = $${queries.length - 1} and deadline = $${queries.length}`);
+    } else if (stardate) {
+      queries.push(stardate);
+      params.push(`deadline >= $${queries.length}`);
+    } else if (enddate) {
+      queries.push(enddate);
+      params.push(`deadline >= $${queries.length}`);
     }
 
-    if(complete){
-      params.push(` complete = $4`)
+    if (complete) {
+      queries.push(complete);
+      params.push(`complete = $${queries.length}`);
     }
 
-    sql += `order by ${sortBy} ${sortMode}`
+    if (params.length > 0) {
+      sqlGet += ` and ${params.join(` ${operation} `)}`;
+      sqlAll += ` and ${params.join(` ${operation} `)}`;
+    }
 
-    console.log(title, stardate, enddate, complete, operation)
+    const limit = 5;
+    const offset = (page - 1) * limit;
 
-    query('select * from todos where userid = $1', [req.session.user.id])
+    query(sqlGet, queries)
       .then(result => {
-        res.render('todos/list', { user: req.session.user, data: result.rows, moment });
+        const total = result.rows[0].total;
+        const pages = Math.ceil(total / limit);
+
+        sqlAll += ` order by ${sortBy} ${sortMode}`
+        queries.push(limit, offset);
+        sqlAll += ` limit $${queries.length - 1} offset $${queries.length}`;
+
+        console.log(sqlAll, queries)
+
+        query(sqlAll, queries)
+          .then(result => {
+            res.render('todos/list',
+               { user: req.session.user, data: result.rows, offset, sortBy, sortMode, title, stardate, enddate, complete, operation , moment, pages, page, url});
+          })
+          .catch(err => {
+            console.log(err);
+          });
       })
       .catch(err => {
         console.log(err);
