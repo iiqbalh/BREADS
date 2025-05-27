@@ -2,12 +2,12 @@
     <div class="container">
         <div class="card text-left">
             <div class="card-header">
-                <a href="/avatar"><img src="/images/avatars/<%= user.avatar ? user.avatar : 'user_image.jpg'%>" alt="avatar" class="avatar-user_image mt-0"></a>
+                <a href="/avatar"><img src="/images/avatars/<%= user.avatar ? user.avatar : 'user_image.jpg'%>"
+                        alt="avatar" class="avatar-user_image mt-0"></a>
                 <h3 class="float-start ms-5 py-1 px-1">
                     <%=user.email%>
                 </h3>
-                <a href="/logout" class="btn btn-secondary float-end"><i
-                        class="fa-solid fa-right-from-bracket"></i>
+                <a href="/logout" class="btn btn-secondary float-end"><i class="fa-solid fa-right-from-bracket"></i>
                     Sign Out</a>
             </div>
             <div class="card-header text-center">
@@ -46,7 +46,7 @@
                         <div class="col-sm-10">
                             <select name="complete" id="complete" class="form-control">
                                 <option disabled selected>-select complete-</option>
-                                <option value="false" <%=!complete=='false' ? ' selected' : '' %>>Not Yet</option>
+                                <option value="false" <%=complete=='false' ? ' selected' : '' %>>Not Yet</option>
                                 <option value="true" <%=complete=='true' ? ' selected' : '' %>>Done</option>
                             </select>
                         </div>
@@ -100,7 +100,7 @@
                         <%if(new Date(item.deadline) < Date.now() && !item.complete) {%>
                             <tr>
                                 <td class="bg-danger p-2 text-white bg-opacity-75">
-                                    <%=index + 1%>
+                                    <%=index + offset + 1%>
                                 </td>
                                 <td class="bg-danger p-2 text-white bg-opacity-75">
                                     <%=item.title%>
@@ -113,7 +113,7 @@
                                 </td>
                                 <td class="bg-danger p-2 text-white bg-opacity-75">
 
-                                    <a class="btn btn-success py-1" href="users/update/<%=item.id%>"><i
+                                    <a class="btn btn-success py-1" href="/users/update/<%=item.id%>"><i
                                             class="fa-solid fa-pen"></i></a>
 
                                     <a class="btn btn-danger py-1" href="#" onclick="showDelele(`<%=item.id%>`)"><i
@@ -136,7 +136,28 @@
                                     </td>
                                     <td>
 
-                                        <a class="btn btn-success py-1" href="users/update/<%=item.id%>"><i
+                                        <div class="modal" tabindex="-1" id="deleteModal">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Delete Confirmation</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>apakah kamu yakin akan menghapus data?
+                                                        </p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <a class="btn btn-secondary px-4 py-1" href="">No</a>
+                                                        <button type="button" class="btn btn-warning px-4 py-1"
+                                                            onclick="deleteData()">Yes</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <a class="btn btn-success py-1" href="/users/update/<%=item.id%>"><i
                                                 class="fa-solid fa-pen"></i></a>
 
                                         <a class="btn btn-danger py-1" href="#" onclick="showDelele(`<%=item.id%>`)"><i
@@ -144,32 +165,11 @@
                                     </td>
                                 </tr>
                                 <%}%>
-
-                                    <div class="modal" tabindex="-1" id="deleteModal">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Delete Confirmation</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p>apakah kamu yakin akan menghapus data?
-                                                    </p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <a class="btn btn-secondary px-4 py-1" href="">No</a>
-                                                    <button type="button" class="btn btn-warning px-4 py-1"
-                                                        onclick="deleteData()">Yes</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <%})%>
                 </tbody>
             </table>
             <div class="card-footer text-body-secondary">
-                <a class="btn btn-primary px-4 py-1" href="users/add"><i class="fa-solid fa-plus"></i></a>
+                <a class="btn btn-primary px-4 py-1" href="/users/add"><i class="fa-solid fa-plus"></i></a>
 
                 <nav aria-label="Page navigation example" class="float-end">
                     <ul class="pagination">
@@ -203,4 +203,21 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+    <script>
+        var deleteId = null;
+        function showDelele(id) {
+            deleteId = id;
+            const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            modal.show();
+        }
+
+        function deleteData() {
+            if (deleteId)
+                window.location = `/users/delete/${deleteId}`
+            deleteId = null;
+        }
+
+    </script>
     <%- include('../partials/footer') %>

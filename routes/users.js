@@ -19,9 +19,7 @@ module.exports = function (db) {
   router.get('/', isLoggedIn, function (req, res, next) {
 
     const { title, stardate, enddate, complete, operation, page = 1, sortBy = 'id', sortMode = 'asc' } = req.query;
-    const url = req.url == '/' ? `/?page=${page}&sortBy=${sortBy}&sortMode=${sortMode}` : req.url
-
-    console.log(sortBy, sortMode)
+    const url = req.url == '/' ? `/?page=${page}&sortBy=${sortBy}&sortMode=${sortMode}` : req.url;
 
     let sqlAll = `select * from todos where userid = ${req.session.user.id}`;
     let sqlGet = `select count(*) as total from todos where userid = ${req.session.user.id}`;
@@ -62,16 +60,14 @@ module.exports = function (db) {
         const total = result.rows[0].total;
         const pages = Math.ceil(total / limit);
 
-        sqlAll += ` order by ${sortBy} ${sortMode}`
+        sqlAll += ` order by ${sortBy} ${sortMode}`;
         queries.push(limit, offset);
         sqlAll += ` limit $${queries.length - 1} offset $${queries.length}`;
-
-        console.log(sqlAll, queries)
 
         query(sqlAll, queries)
           .then(result => {
             res.render('todos/list',
-               { user: req.session.user, data: result.rows, offset, sortBy, sortMode, title, stardate, enddate, complete, operation , moment, pages, page, url});
+              { user: req.session.user, data: result.rows, offset, sortBy, sortMode, title, stardate, enddate, complete, operation, moment, pages, page, url });
           })
           .catch(err => {
             console.log(err);
@@ -97,7 +93,7 @@ module.exports = function (db) {
   });
 
   router.get('/update/:index', function (req, res, next) {
-    const index = req.params.index
+    const index = req.params.index;
     query('select * from todos where id = $1', [index])
       .then(result => {
         console.log(result.rows);
@@ -109,9 +105,20 @@ module.exports = function (db) {
   });
 
   router.post('/update/:index', function (req, res, next) {
-    const index = req.params.index
-    console.log(req.body.complete)
+    const index = req.params.index;
     query('update todos set title = $1, deadline = $2, complete = $3 WHERE id = $4', [req.body.title, req.body.deadline, req.body.complete || false, index])
+      .then(() => {
+        res.redirect('/users');
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  });
+
+  router.get('/delete/:index', function (req, res, next) {
+    const index = req.params.index;
+    console.log(index)
+    query('delete from todos where id = $1', [index])
       .then(() => {
         res.redirect('/users');
       })
