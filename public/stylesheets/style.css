@@ -7,8 +7,11 @@ th a {
   height: 50px;
   width: 50px;
   border-radius: 50%;
-  object-fit: cover;
   position: absolute;
   left: 10px;
   top: 8px;
+}
+
+img {
+  object-fit: cover;
 }
