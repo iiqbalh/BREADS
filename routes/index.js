@@ -3,6 +3,7 @@ var router = express.Router();
 const bcrypt = require('bcrypt');
 const { isLoggedIn } = require('../helper/util');
 const path = require('path');
+const { title } = require('process');
 const saltRounds = 10;
 
 module.exports = function (db) {
@@ -56,7 +57,7 @@ module.exports = function (db) {
 
   //avatar
   router.get('/avatar', isLoggedIn, function (req, res, next) {
-    res.render('avatar', { user: 'Change Avatar', user: req.session.user });
+    res.render('avatar', { title: 'Change Avatar', user: req.session.user });
   });
 
   router.post('/avatar', isLoggedIn, function (req, res, next) {

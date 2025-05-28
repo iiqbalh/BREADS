@@ -48,12 +48,15 @@ module.exports = function (db) {
     }
 
     if (params.length > 0) {
-      sqlGet += ` and ${params.join(` ${operation} `)}`;
-      sqlAll += ` and ${params.join(` ${operation} `)}`;
+      sqlGet += ` and (${params.join(` ${operation} `)})`;
+      sqlAll += ` and (${params.join(` ${operation} `)})`;
     }
 
     const limit = 5;
     const offset = (page - 1) * limit;
+
+    console.log(sqlGet)
+    console.log(sqlAll)
 
     query(sqlGet, queries)
       .then(result => {
