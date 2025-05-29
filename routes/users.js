@@ -33,13 +33,13 @@ module.exports = function (db) {
 
     if (stardate && enddate) {
       queries.push(stardate, enddate);
-      params.push(`deadline between $${queries.length - 1} and $${queries.length}`);
+      params.push(`deadline between $${queries.length - 1} and $${queries.length}::TIMESTAMP + INTERVAL '1 DAY - 1 SECOND'`);
     } else if (stardate) {
       queries.push(stardate);
       params.push(`deadline >= $${queries.length}`);
     } else if (enddate) {
       queries.push(enddate);
-      params.push(`deadline <= $${queries.length}`);
+      params.push(`deadline <= $${queries.length}::TIMESTAMP + INTERVAL '1 DAY - 1 SECOND'`);
     }
 
     if (complete) {
@@ -54,9 +54,6 @@ module.exports = function (db) {
 
     const limit = 5;
     const offset = (page - 1) * limit;
-
-    console.log(sqlGet)
-    console.log(sqlAll)
 
     query(sqlGet, queries)
       .then(result => {

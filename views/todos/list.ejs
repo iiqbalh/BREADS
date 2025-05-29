@@ -97,7 +97,7 @@
                 <tbody>
 
                     <%data.forEach((item, index)=> {%>
-                        <%if(new Date(item.deadline) < Date.now() && !item.complete) {%>
+                        <%if(new Date(item.deadline) < moment() && !item.complete) {%>
                             <tr>
                                 <td class="bg-danger p-2 text-white bg-opacity-75">
                                     <%=index + offset + 1%>
@@ -160,8 +160,8 @@
                                         <a class="btn btn-success py-1" href="/users/update/<%=item.id%>"><i
                                                 class="fa-solid fa-pen"></i></a>
 
-                                        <a class="btn btn-danger py-1" href="#" onclick="showDelele(`<%=item.id%>`)"><i
-                                                class="fa-solid fa-trash"></i></a>
+                                        <button class="btn btn-danger py-1" onclick="showDelele(`<%=item.id%>`)"><i
+                                                class="fa-solid fa-trash"></i></button>
                                     </td>
                                 </tr>
                                 <%}%>
@@ -209,6 +209,7 @@
         var deleteId = null;
         function showDelele(id) {
             deleteId = id;
+            console.log(deleteId)
             const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
             modal.show();
         }
