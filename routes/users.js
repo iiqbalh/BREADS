@@ -33,13 +33,13 @@ module.exports = function (db) {
 
     if (stardate && enddate) {
       queries.push(stardate, enddate);
-      params.push(`deadline = $${queries.length - 1} and deadline = $${queries.length}`);
+      params.push(`deadline between $${queries.length - 1} and $${queries.length}`);
     } else if (stardate) {
       queries.push(stardate);
       params.push(`deadline >= $${queries.length}`);
     } else if (enddate) {
       queries.push(enddate);
-      params.push(`deadline >= $${queries.length}`);
+      params.push(`deadline <= $${queries.length}`);
     }
 
     if (complete) {
