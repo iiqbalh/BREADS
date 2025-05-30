@@ -116,8 +116,8 @@
                                     <a class="btn btn-success py-1" href="/users/update/<%=item.id%>"><i
                                             class="fa-solid fa-pen"></i></a>
 
-                                    <a class="btn btn-danger py-1" href="#" onclick="showDelele(`<%=item.id%>`)"><i
-                                            class="fa-solid fa-trash"></i></a>
+                                    <button class="btn btn-danger py-1" onclick="showDelele(`<%=item.id%>`)"><i
+                                            class="fa-solid fa-trash"></i></button>
                                 </td>
                             </tr>
                             <%} else {%>
@@ -136,27 +136,6 @@
                                     </td>
                                     <td>
 
-                                        <div class="modal" tabindex="-1" id="deleteModal">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Delete Confirmation</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <p>apakah kamu yakin akan menghapus data?
-                                                        </p>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <a class="btn btn-secondary px-4 py-1" href="">No</a>
-                                                        <button type="button" class="btn btn-warning px-4 py-1"
-                                                            onclick="deleteData()">Yes</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
                                         <a class="btn btn-success py-1" href="/users/update/<%=item.id%>"><i
                                                 class="fa-solid fa-pen"></i></a>
 
@@ -165,6 +144,26 @@
                                     </td>
                                 </tr>
                                 <%}%>
+                                    <div class="modal" tabindex="-1" id="deleteModal">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Delete Confirmation</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>apakah kamu yakin akan menghapus data?
+                                                    </p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a class="btn btn-secondary px-4 py-1" href="">No</a>
+                                                    <button type="button" class="btn btn-warning px-4 py-1"
+                                                        onclick="deleteData()">Yes</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <%})%>
                 </tbody>
             </table>
